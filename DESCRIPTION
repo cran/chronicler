@@ -1,6 +1,6 @@
 Package: chronicler
 Title: Add Logging to Functions
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: 
     person("Bruno", "Rodrigues", , "bruno@brodrigues.co", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0002-3211-3689"))
@@ -10,9 +10,9 @@ Description: Decorate functions to make them return enhanced output. The enhance
   Tools to handle decorated functions are included, such as a forward pipe operator that makes chaining decorated functions possible.
 License: GPL (>= 3)
 Encoding: UTF-8
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 BugReports: https://github.com/b-rodrigues/chronicler/issues
-Depends: R (>= 4.1),
+Depends: R (>= 4.0),
 Imports: clipr, diffobj, dplyr, maybe, rlang, stringr, tibble
 Suggests: knitr, lubridate, purrr, rmarkdown, testthat (>= 3.1.4),
         tidyr
@@ -20,9 +20,9 @@ VignetteBuilder: knitr
 Config/testthat/edition: 3
 LazyData: true
 NeedsCompilation: no
-Packaged: 2022-05-13 08:23:07 UTC; LLP685
+Packaged: 2023-02-03 13:28:19 UTC; cbrunos
 Author: Bruno Rodrigues [aut, cre, cph]
     (<https://orcid.org/0000-0002-3211-3689>)
 Maintainer: Bruno Rodrigues <bruno@brodrigues.co>
 Repository: CRAN
-Date/Publication: 2022-05-17 09:40:04 UTC
+Date/Publication: 2023-02-03 14:32:31 UTC

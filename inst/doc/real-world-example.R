@@ -11,6 +11,9 @@ library(tidyr)
 library(stringr)
 library(lubridate)
 
+# Ensure chronicler version of `pick()` is being used
+pick <- chronicler::pick
+
 data("avia")
 
 ## -----------------------------------------------------------------------------

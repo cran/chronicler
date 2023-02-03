@@ -18,7 +18,7 @@ make_log_df <- function(ops_number = 1,
                         res_pure,
                         start = Sys.time(),
                         end = Sys.time(),
-                        .g = (function(x) NA),
+                        .g = (\(x) NA),
                         diff_obj = NULL){
 
   outcome <- ifelse(success == 1,
@@ -120,12 +120,12 @@ read_log <- function(.c){
 #' @return No return value, called for side effects (printing the object on screen).
 #' @details
 #' `chronicle` object are, at their core, lists with the following elements:
-#' * "$value": an object of type `maybe` containing the result of the computation (see the "Maybe monad" vignette for more details on `maybe`s).
-#' * "$log_df": a `data.frame` object containing the printed object’s log information. This object is used by `read_log()` to generate a human-readable log.
+#' * "$value": a an object of type `maybe` containing the result of the computation (see the "Maybe monad" vignette for more details on `maybe`s).
+#' * "$log_df": a `data.frame` object containing the printed object’s log information.
 #'
 #' `print.chronicle()` prints the object on screen and shows:
-#' * the "$value" using its `print()` method (for example, if "$value" is a `data.frame` object, `print.data.frame()` will be used).
-#' * a message indicating to the user how to get "$value" out of the `chronicle` object and how to read the object’s log.
+#' * the value using its `print()` method (for example, if the value is a data.frame, `print.data.frame()` will be used)
+#' * a message indicating to the user how to recuperate the value inside the `chronicle` object and how to read the object’s log
 #' @export
 print.chronicle <- function(x, ...){
 
@@ -264,7 +264,7 @@ purely <- function(.f, strict = 2){
 #' @examples
 #' record(sqrt)(10)
 #' @export
-record <- function(.f, .g = (function(x) NA), strict = 2, diff = "none"){
+record <- function(.f, .g = (\(x) NA), strict = 2, diff = "none"){
 
   fstring <- deparse1(substitute(.f))
 
@@ -375,11 +375,10 @@ bind_record <- function(.c, .f, ...){
 #' flatten_record(a)
 flatten_record <- function(.c){
 
-  structure(
-    list(value = .c$value$content$value,
-         log_df = dplyr::bind_rows(.c$value$log_df,
-                                   .c$log_df)),
-    class = "chronicle")
+  list(value = .c$value$content$value,
+       log_df = dplyr::bind_rows(.c$value$log_df,
+                                 .c$log_df)) |>
+    structure(class = "chronicle")
 
 }
 
@@ -407,11 +406,10 @@ fmap_record <- function(.c, .f, ...){
     start = Sys.time(),
     end = Sys.time())
 
-  structure(
-    list(value = maybe::fmap(.c$value, .f, ...),
-         log_df = dplyr::bind_rows(.c$log_df,
-                                   log_df)),
-    class = "chronicle")
+  list(value = maybe::fmap(.c$value, .f, ...),
+       log_df = dplyr::bind_rows(.c$log_df,
+                                 log_df)) |>
+  structure(class = "chronicle")
 }
 
 
@@ -447,12 +445,10 @@ as_chronicle <- function(.x, .log_df = data.frame()){
     start = Sys.time(),
     end = Sys.time())
 
-  structure(
-    list(value = maybe::just(.x),
-         log_df = dplyr::bind_rows(.log_df,
-                                   log_df),
-         class = "chronicle")
-    )
+  list(value = maybe::just(.x),
+       log_df = dplyr::bind_rows(.log_df,
+                                 log_df)) |>
+  structure(class = "chronicle")
 
 }
 
