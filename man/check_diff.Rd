@@ -18,9 +18,9 @@ A data.frame with the selected columns and column "diff_obj".
 Check the output of the diff column
 }
 \details{
-\code{diff} is an option argument to the \code{record()} function. When \code{diff} = "full",
+`diff` is an option argument to the `record()` function. When `diff` = "full",
 a diff of the input and output of the decorated function gets saved, and if
-\code{diff} = "summary" only a summary of the diff is saved.
+`diff` = "summary" only a summary of the diff is saved.
 }
 \examples{
 r_subset <- record(subset, diff = "full")

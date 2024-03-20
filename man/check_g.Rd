@@ -18,9 +18,9 @@ A data.frame with the selected columns and column "g".
 Check the output of the .g function
 }
 \details{
-\code{.g} is an option argument to the \code{record()} function. Providing this optional
+`.g` is an option argument to the `record()` function. Providing this optional
 function allows you, at each step of a pipeline, to monitor interesting characteristics
-of the \code{value} object. See the package's Readme file for an example with data frames.
+of the `value` object. See the package's Readme file for an example with data frames.
 }
 \examples{
 r_subset <- record(subset, .g = dim)

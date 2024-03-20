@@ -10,7 +10,7 @@ flatten_record(.c)
 \item{.c}{A nested chronicle object, where the $value element is itself a chronicle object}
 }
 \value{
-Returns \code{.c} where value is the actual value, and logs are concatenated.
+Returns `.c` where value is the actual value, and logs are concatenated.
 }
 \description{
 Flatten nested chronicle objects

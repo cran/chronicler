@@ -33,7 +33,7 @@ make_log_df(
 
 \item{.g}{Optional. A function to apply to the intermediary results for monitoring purposes. Defaults to returning NA.}
 
-\item{diff_obj}{Optional. Output of the \code{diff} parameter in \code{record()}.}
+\item{diff_obj}{Optional. Output of the `diff` parameter in `record()`.}
 }
 \value{
 A tibble containing the log.

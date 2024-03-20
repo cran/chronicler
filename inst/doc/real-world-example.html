@@ -49,7 +49,7 @@ overflow: visible;
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -347,142 +347,142 @@ but with some minor updates to reflect the current state of the
 <code>{chronicler}</code>.</p>
 <p>Let’s first load the required packages, and the <code>avia</code>
 dataset included in the <code>{chronicler}</code> package:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(chronicler)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Attaching package: &#39;dplyr&#39;</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The following object is masked from &#39;package:testthat&#39;:</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     matches</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The following object is masked from &#39;package:chronicler&#39;:</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     pick</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The following objects are masked from &#39;package:stats&#39;:</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     filter, lag</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The following objects are masked from &#39;package:base&#39;:</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Attaching package: &#39;tidyr&#39;</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The following object is masked from &#39;package:testthat&#39;:</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     matches</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Attaching package: &#39;lubridate&#39;</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The following objects are masked from &#39;package:base&#39;:</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     date, intersect, setdiff, union</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure chronicler version of `pick()` is being used</span></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>pick <span class="ot">&lt;-</span> chronicler<span class="sc">::</span>pick</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;avia&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(chronicler)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co">#&gt; Attaching package: &#39;dplyr&#39;</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="co">#&gt; The following object is masked from &#39;package:testthat&#39;:</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="co">#&gt;     matches</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="co">#&gt; The following object is masked from &#39;package:chronicler&#39;:</span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="co">#&gt;     pick</span></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="co">#&gt; The following objects are masked from &#39;package:stats&#39;:</span></span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="co">#&gt;     filter, lag</span></span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="co">#&gt; The following objects are masked from &#39;package:base&#39;:</span></span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a><span class="co">#&gt; Attaching package: &#39;tidyr&#39;</span></span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a><span class="co">#&gt; The following object is masked from &#39;package:testthat&#39;:</span></span>
+<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a><span class="co">#&gt;     matches</span></span>
+<span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb1-25"><a href="#cb1-25" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-26"><a href="#cb1-26" tabindex="-1"></a><span class="co">#&gt; Attaching package: &#39;lubridate&#39;</span></span>
+<span id="cb1-27"><a href="#cb1-27" tabindex="-1"></a><span class="co">#&gt; The following objects are masked from &#39;package:base&#39;:</span></span>
+<span id="cb1-28"><a href="#cb1-28" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-29"><a href="#cb1-29" tabindex="-1"></a><span class="co">#&gt;     date, intersect, setdiff, union</span></span>
+<span id="cb1-30"><a href="#cb1-30" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" tabindex="-1"></a><span class="co"># Ensure chronicler version of `pick()` is being used</span></span>
+<span id="cb1-32"><a href="#cb1-32" tabindex="-1"></a>pick <span class="ot">&lt;-</span> chronicler<span class="sc">::</span>pick</span>
+<span id="cb1-33"><a href="#cb1-33" tabindex="-1"></a></span>
+<span id="cb1-34"><a href="#cb1-34" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;avia&quot;</span>)</span></code></pre></div>
 <p>Now I need to define the needed functions for the analysis. To
 improve logging, I add the <code>dim()</code> function as the
 <code>.g</code> argument of each function below. This will make it
 possible to see how the dimensions of the data change inside the
 pipeline:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define required functions </span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># You can use `record_many()` to avoid having to write everything</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>r_select <span class="ot">&lt;-</span> <span class="fu">record</span>(select, <span class="at">.g =</span> dim)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>r_pivot_longer <span class="ot">&lt;-</span> <span class="fu">record</span>(pivot_longer, <span class="at">.g =</span> dim)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>r_filter <span class="ot">&lt;-</span> <span class="fu">record</span>(filter, <span class="at">.g =</span> dim)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>r_mutate <span class="ot">&lt;-</span> <span class="fu">record</span>(mutate, <span class="at">.g =</span> dim)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>r_separate <span class="ot">&lt;-</span> <span class="fu">record</span>(separate, <span class="at">.g =</span> dim)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>r_group_by <span class="ot">&lt;-</span> <span class="fu">record</span>(group_by, <span class="at">.g =</span> dim)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>r_summarise <span class="ot">&lt;-</span> <span class="fu">record</span>(summarise, <span class="at">.g =</span> dim)</span></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>avia_clean <span class="ot">&lt;-</span> avia <span class="sc">%&gt;%</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">r_select</span>(<span class="dv">1</span>, <span class="fu">contains</span>(<span class="st">&quot;20&quot;</span>)) <span class="sc">%&gt;%</span> <span class="co"># select the first column and every column starting with 20</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_record</span>(r_pivot_longer, <span class="sc">-</span><span class="fu">starts_with</span>(<span class="st">&quot;unit&quot;</span>), <span class="at">names_to =</span> <span class="st">&quot;date&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;passengers&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_record</span>(r_separate,</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">col =</span> <span class="dv">1</span>,</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">into =</span> <span class="fu">c</span>(<span class="st">&quot;unit&quot;</span>, <span class="st">&quot;tra_meas&quot;</span>, <span class="st">&quot;air_pr</span><span class="sc">\\</span><span class="st">time&quot;</span>),</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">sep =</span> <span class="st">&quot;,&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Define required functions </span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co"># You can use `record_many()` to avoid having to write everything</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>r_select <span class="ot">&lt;-</span> <span class="fu">record</span>(select, <span class="at">.g =</span> dim)</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>r_pivot_longer <span class="ot">&lt;-</span> <span class="fu">record</span>(pivot_longer, <span class="at">.g =</span> dim)</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>r_filter <span class="ot">&lt;-</span> <span class="fu">record</span>(filter, <span class="at">.g =</span> dim)</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>r_mutate <span class="ot">&lt;-</span> <span class="fu">record</span>(mutate, <span class="at">.g =</span> dim)</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>r_separate <span class="ot">&lt;-</span> <span class="fu">record</span>(separate, <span class="at">.g =</span> dim)</span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>r_group_by <span class="ot">&lt;-</span> <span class="fu">record</span>(group_by, <span class="at">.g =</span> dim)</span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>r_summarise <span class="ot">&lt;-</span> <span class="fu">record</span>(summarise, <span class="at">.g =</span> dim)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>avia_clean <span class="ot">&lt;-</span> avia <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="fu">r_select</span>(<span class="dv">1</span>, <span class="fu">contains</span>(<span class="st">&quot;20&quot;</span>)) <span class="sc">%&gt;%</span> <span class="co"># select the first column and every column starting with 20</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="fu">bind_record</span>(r_pivot_longer, <span class="sc">-</span><span class="fu">starts_with</span>(<span class="st">&quot;unit&quot;</span>), <span class="at">names_to =</span> <span class="st">&quot;date&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;passengers&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="fu">bind_record</span>(r_separate,</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>              <span class="at">col =</span> <span class="dv">1</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>              <span class="at">into =</span> <span class="fu">c</span>(<span class="st">&quot;unit&quot;</span>, <span class="st">&quot;tra_meas&quot;</span>, <span class="st">&quot;air_pr</span><span class="sc">\\</span><span class="st">time&quot;</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>              <span class="at">sep =</span> <span class="st">&quot;,&quot;</span>)</span></code></pre></div>
 <p>Let’s focus on monthly data:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>avia_monthly <span class="ot">&lt;-</span> avia_clean <span class="sc">%&gt;%</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_record</span>(r_filter,</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>              tra_meas <span class="sc">==</span> <span class="st">&quot;PAS_BRD_ARR&quot;</span>,</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>              <span class="sc">!</span><span class="fu">is.na</span>(passengers),</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>              <span class="fu">str_detect</span>(date, <span class="st">&quot;M&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_record</span>(r_mutate,</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">date =</span> <span class="fu">paste0</span>(date, <span class="st">&quot;01&quot;</span>),</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>              <span class="at">date =</span> <span class="fu">ymd</span>(date)) <span class="sc">%&gt;%</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_record</span>(r_select,</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">destination =</span> <span class="st">&quot;air_pr</span><span class="sc">\\</span><span class="st">time&quot;</span>, date, passengers)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>avia_monthly <span class="ot">&lt;-</span> avia_clean <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="fu">bind_record</span>(r_filter,</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>              tra_meas <span class="sc">==</span> <span class="st">&quot;PAS_BRD_ARR&quot;</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>              <span class="sc">!</span><span class="fu">is.na</span>(passengers),</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>              <span class="fu">str_detect</span>(date, <span class="st">&quot;M&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  <span class="fu">bind_record</span>(r_mutate,</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>              <span class="at">date =</span> <span class="fu">paste0</span>(date, <span class="st">&quot;01&quot;</span>),</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>              <span class="at">date =</span> <span class="fu">ymd</span>(date)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>  <span class="fu">bind_record</span>(r_select,</span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>              <span class="at">destination =</span> <span class="st">&quot;air_pr</span><span class="sc">\\</span><span class="st">time&quot;</span>, date, passengers)</span></code></pre></div>
 <p><code>avia_monthly</code> is an object of class
 <code>chronicle</code>, but in essence, it is just a list, with its own
 print method:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>avia_monthly</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; OK! Value computed successfully:</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---------------</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Just</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 7,632 × 3</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    destination     date       passengers</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;           &lt;date&gt;     &lt;chr&gt;     </span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 LU_ELLX_AT_LOWW 2018-03-01 3967      </span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 LU_ELLX_AT_LOWW 2018-02-01 3232      </span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 LU_ELLX_AT_LOWW 2018-01-01 3701      </span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 LU_ELLX_AT_LOWW 2017-12-01 4249      </span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 LU_ELLX_AT_LOWW 2017-11-01 4311      </span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 LU_ELLX_AT_LOWW 2017-10-01 4591      </span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 LU_ELLX_AT_LOWW 2017-09-01 4816      </span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 LU_ELLX_AT_LOWW 2017-08-01 4399      </span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 LU_ELLX_AT_LOWW 2017-07-01 4277      </span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 LU_ELLX_AT_LOWW 2017-06-01 4674      </span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 7,622 more rows</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---------------</span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; This is an object of type `chronicle`.</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Retrieve the value of this object with pick(.c, &quot;value&quot;).</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; To read the log of this object, call read_log(.c).</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>avia_monthly</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="co">#&gt; OK! Value computed successfully:</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co">#&gt; ---------------</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#&gt; Just</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co">#&gt; # A tibble: 7,632 × 3</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="co">#&gt;    destination     date       passengers</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;           &lt;date&gt;     &lt;chr&gt;     </span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co">#&gt;  1 LU_ELLX_AT_LOWW 2018-03-01 3967      </span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#&gt;  2 LU_ELLX_AT_LOWW 2018-02-01 3232      </span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#&gt;  3 LU_ELLX_AT_LOWW 2018-01-01 3701      </span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#&gt;  4 LU_ELLX_AT_LOWW 2017-12-01 4249      </span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&gt;  5 LU_ELLX_AT_LOWW 2017-11-01 4311      </span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&gt;  6 LU_ELLX_AT_LOWW 2017-10-01 4591      </span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt;  7 LU_ELLX_AT_LOWW 2017-09-01 4816      </span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt;  8 LU_ELLX_AT_LOWW 2017-08-01 4399      </span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt;  9 LU_ELLX_AT_LOWW 2017-07-01 4277      </span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt; 10 LU_ELLX_AT_LOWW 2017-06-01 4674      </span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt; # ℹ 7,622 more rows</span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt; ---------------</span></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#&gt; This is an object of type `chronicle`.</span></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#&gt; Retrieve the value of this object with pick(.c, &quot;value&quot;).</span></span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="co">#&gt; To read the log of this object, call read_log(.c).</span></span></code></pre></div>
 <p>Now that the data is clean, we can read the log:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">read_log</span>(avia_monthly)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Complete log:&quot;                                                                                                             </span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2] &quot;OK! select(1,contains(\&quot;20\&quot;)) ran successfully at 2023-02-03 14:28:16&quot;                                                    </span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] &quot;OK! pivot_longer(-starts_with(\&quot;unit\&quot;),date,passengers) ran successfully at 2023-02-03 14:28:16&quot;                          </span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] &quot;OK! separate(1,c(\&quot;unit\&quot;, \&quot;tra_meas\&quot;, \&quot;air_pr\\\\time\&quot;),,) ran successfully at 2023-02-03 14:28:16&quot;                   </span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5] &quot;OK! filter(tra_meas == \&quot;PAS_BRD_ARR\&quot;,!is.na(passengers),str_detect(date, \&quot;M\&quot;)) ran successfully at 2023-02-03 14:28:18&quot;</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [6] &quot;OK! mutate(paste0(date, \&quot;01\&quot;),ymd(date)) ran successfully at 2023-02-03 14:28:18&quot;                                        </span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [7] &quot;OK! select(air_pr\\time,date,passengers) ran successfully at 2023-02-03 14:28:18&quot;                                          </span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [8] &quot;Total running time: 1.86431932449341 secs&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">read_log</span>(avia_monthly)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Complete log:&quot;                                                                                                                   </span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co">#&gt; [2] &quot;OK! select(1,contains(\&quot;20\&quot;)) ran successfully at 2024-03-20 10:35:20.318707&quot;                                                   </span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co">#&gt; [3] &quot;OK! pivot_longer(-starts_with(\&quot;unit\&quot;),date,passengers) ran successfully at 2024-03-20 10:35:20.318605&quot;                         </span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="co">#&gt; [4] &quot;OK! separate(1,c(\&quot;unit\&quot;, \&quot;tra_meas\&quot;, \&quot;air_pr\\\\time\&quot;),,) ran successfully at 2024-03-20 10:35:20.318477&quot;                  </span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co">#&gt; [5] &quot;OK! filter(tra_meas == \&quot;PAS_BRD_ARR\&quot;,!is.na(passengers),str_detect(date, \&quot;M\&quot;)) ran successfully at 2024-03-20 10:35:21.95984&quot;</span></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="co">#&gt; [6] &quot;OK! mutate(paste0(date, \&quot;01\&quot;),ymd(date)) ran successfully at 2024-03-20 10:35:21.959718&quot;                                       </span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="co">#&gt; [7] &quot;OK! select(air_pr\\time,date,passengers) ran successfully at 2024-03-20 10:35:21.959596&quot;                                         </span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co">#&gt; [8] &quot;Total running time: 1.80789136886597 secs&quot;</span></span></code></pre></div>
 <p>This is especially useful if the object <code>avia_monthly</code>
 gets saved using <code>saveRDS()</code>. People that then read this
 object, can read the log to know what happened and reproduce the steps
 if necessary.</p>
 <p>Let’s take a look at the final data set:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>avia_monthly <span class="sc">%&gt;%</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pick</span>(<span class="st">&quot;value&quot;</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 7,632 × 3</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    destination     date       passengers</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;           &lt;date&gt;     &lt;chr&gt;     </span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 LU_ELLX_AT_LOWW 2018-03-01 3967      </span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 LU_ELLX_AT_LOWW 2018-02-01 3232      </span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 LU_ELLX_AT_LOWW 2018-01-01 3701      </span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 LU_ELLX_AT_LOWW 2017-12-01 4249      </span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 LU_ELLX_AT_LOWW 2017-11-01 4311      </span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 LU_ELLX_AT_LOWW 2017-10-01 4591      </span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 LU_ELLX_AT_LOWW 2017-09-01 4816      </span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 LU_ELLX_AT_LOWW 2017-08-01 4399      </span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 LU_ELLX_AT_LOWW 2017-07-01 4277      </span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 LU_ELLX_AT_LOWW 2017-06-01 4674      </span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 7,622 more rows</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>avia_monthly <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="fu">pick</span>(<span class="st">&quot;value&quot;</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#&gt; # A tibble: 7,632 × 3</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#&gt;    destination     date       passengers</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;           &lt;date&gt;     &lt;chr&gt;     </span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="co">#&gt;  1 LU_ELLX_AT_LOWW 2018-03-01 3967      </span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co">#&gt;  2 LU_ELLX_AT_LOWW 2018-02-01 3232      </span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="co">#&gt;  3 LU_ELLX_AT_LOWW 2018-01-01 3701      </span></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="co">#&gt;  4 LU_ELLX_AT_LOWW 2017-12-01 4249      </span></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="co">#&gt;  5 LU_ELLX_AT_LOWW 2017-11-01 4311      </span></span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a><span class="co">#&gt;  6 LU_ELLX_AT_LOWW 2017-10-01 4591      </span></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a><span class="co">#&gt;  7 LU_ELLX_AT_LOWW 2017-09-01 4816      </span></span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a><span class="co">#&gt;  8 LU_ELLX_AT_LOWW 2017-08-01 4399      </span></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a><span class="co">#&gt;  9 LU_ELLX_AT_LOWW 2017-07-01 4277      </span></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a><span class="co">#&gt; 10 LU_ELLX_AT_LOWW 2017-06-01 4674      </span></span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a><span class="co">#&gt; # ℹ 7,622 more rows</span></span></code></pre></div>
 <p>It is also possible to take a look at the underlying
 <code>.log_df</code> object that contains more details, and see the
 output of the <code>.g</code> argument (which was defined in the
 beginning as the <code>dim()</code> function):</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_g</span>(avia_monthly)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ops_number     function         g</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1          1       select  509, 231</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2          2 pivot_longer 117070, 3</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3          3     separate 117070, 5</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4          4       filter   7632, 5</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5          5       mutate   7632, 5</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6          6       select   7632, 3</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">check_g</span>(avia_monthly)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co">#&gt;   ops_number     function         g</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co">#&gt; 1          1       select  509, 231</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co">#&gt; 2          2 pivot_longer 117070, 3</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co">#&gt; 3          3     separate 117070, 5</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co">#&gt; 4          4       filter   7632, 5</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co">#&gt; 5          5       mutate   7632, 5</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co">#&gt; 6          6       select   7632, 3</span></span></code></pre></div>
 <p>After <code>select()</code> the data has 509 rows and 231 columns,
 after the call to <code>pivot_longer()</code> 117070 rows and 3 columns,
 <code>separate()</code> adds two columns, after <code>filter()</code>
